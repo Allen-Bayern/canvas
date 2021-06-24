@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>画板</title>
+</head>
+<body>
+    <canvas id="canvas">
+        <script>
+            let canvas = document.getElementById('canvas'); // DOM操作中按id获取元素的过程
+            canvas.width = document.documentElement.clientWidth; // 指定元素的宽
+            canvas.height = document.documentElement.clientHeight; // 指定元素的高
+
+            let ctx = canvas.getContext('2d');
+
+            let painting = false;
+
+            ctx.fillStyle = "black";
+            ctx.strokeStyle = 'none';
+            ctx.lineWidth = 20;
+            ctx.lineJoin = 'miter';
+
+            // 判断触屏设备。文档来源：https://cloud.tencent.com/developer/ask/49518
+            var isTouchDevice = 'ontouchstart' in document.documentElement;
+
+            if (isTouchDevice) {
+                canvas.ontouchmove = (e) =>{
+                    let x = e.touches[0].clientX;
+                    let y = e.touches[0].clientY;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 10, 0, 2 * Math.PI);
+                    ctx.stroke();
+                    ctx.fill();
+                }
+            }else{
+                canvas.onmousedown = () =>{
+                    painting = true;
+                }
+
+                canvas.onmousemove = (e) => {
+                    if (painting === true){
+                        ctx.beginPath();
+                        ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+                        ctx.stroke();
+                        ctx.fill();
+                    }else{
+                        console.log('Nothing to do');
+                    }
+                }
+
+                canvas.onmouseup = () => {
+                    painting = false;
+                }
+            }
+
+            
+        </script>
+    </canvas>
+</body>
+</html>
